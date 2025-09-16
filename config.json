@@ -1,0 +1,7 @@
+{
+  "outputDir": "docs",
+  "buildOptions": {
+    "minify": true,
+    "sourcemap": false
+  }
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo - React Page Lite</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body
+    class="bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 min-h-screen flex items-center justify-center px-4"
+  >
+    <main class="max-w-2xl w-full">
+      <div class="mb-8">
+        <a
+          href="./index.html"
+          class="text-blue-600 hover:text-blue-700 font-medium inline-flex items-center gap-2"
+        >
+          ← Back to Home
+        </a>
+      </div>
+      <div class="text-center mb-12">
+        <h1 class="text-5xl font-bold text-gray-900 mb-4">Interactive Demo</h1>
+        <p class="text-lg text-gray-600">
+          This counter is wrapped in an
+          <!-- -->
+          <code class="bg-white px-2 py-1 rounded border border-gray-200 text-sm">
+            &lt;Island&gt;
+          </code>
+          <!-- -->
+          making it interactive, while the rest of this page is static HTML.
+        </p>
+      </div>
+      <div
+        class="bg-white/80 backdrop-blur-sm rounded-xl shadow-2xl p-12 border border-gray-200 mb-12"
+      >
+        <div id="island-1" data-island="Counter" data-props="{}">
+          <div class="card">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              count is
+              <!-- -->
+              0
+            </button>
+            <p class="text-gray-600 mt-2">
+              Edit
+              <!-- -->
+              <code class="bg-gray-100 px-1 rounded">src/components/Counter.tsx</code>
+              <!-- -->
+              and save to test HMR
+            </p>
+          </div>
+        </div>
+        <script type="module" src="./islandRender.js" defer=""></script>
+      </div>
+      <div class="bg-gray-900 rounded-xl overflow-hidden shadow-xl">
+        <div class="bg-gray-800 px-6 py-3 border-b border-gray-700">
+          <span class="text-gray-300 text-sm font-mono">src/pages/demo.tsx</span>
+        </div>
+        <pre
+          class="p-6 overflow-x-auto text-sm leading-relaxed"
+        ><code class="text-gray-300">import { Island } from &quot;@/Island&quot;;
+import { Counter } from &quot;@/components/Counter&quot;;
+
+const DemoPage = () =&gt; (
+  &lt;html lang=&quot;en&quot;&gt;
+    &lt;body&gt;
+      &lt;h1&gt;Static Content&lt;/h1&gt;
+
+      {/* Only this part gets JavaScript */}
+      &lt;Island&gt;
+        &lt;Counter /&gt;
+      &lt;/Island&gt;
+    &lt;/body&gt;
+  &lt;/html&gt;
+);</code></pre>
+      </div>
+      <div class="mt-8 text-center text-gray-500 text-sm">
+        <p>✨ Islands architecture: JavaScript only where you need it</p>
+        <p class="mt-2">
+          <a
+            href="https://github.com/PedroMarianoAlmeida/reactpagelite"
+            class="text-blue-600 hover:text-blue-700"
+          >
+            View on GitHub
+          </a>
+        </p>
+      </div>
+    </main>
+  </body>
+</html>

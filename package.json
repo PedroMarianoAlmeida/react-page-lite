@@ -1,0 +1,65 @@
+{
+  "name": "react-page-lite",
+  "version": "1.0.0",
+  "description": "Static site generator with islands architecture",
+  "type": "module",
+  "bin": {
+    "react-page-lite": "./cli.js"
+  },
+  "files": [
+    "cli.js",
+    "src",
+    "_internal",
+    "tsconfig.json",
+    "tailwind.config.js",
+    "postcss.config.js",
+    "nodemon.json",
+    "config.json",
+    "readme.md",
+    "CLAUDE.md",
+    ".gitignore"
+  ],
+  "scripts": {
+    "buildAndWatch": "nodemon --exec \"node _internal/build.js\""
+  },
+  "keywords": [
+    "react",
+    "static-site-generator",
+    "islands-architecture",
+    "template",
+    "boilerplate",
+    "ssg",
+    "tailwind",
+    "typescript"
+  ],
+  "author": "Pedro Almeida",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PedroMarianoAlmeida/react-page-lite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PedroMarianoAlmeida/react-page-lite/issues"
+  },
+  "homepage": "https://github.com/PedroMarianoAlmeida/react-page-lite#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.16",
+    "@types/node": "^24.5.0",
+    "@types/react": "^19.1.13",
+    "autoprefixer": "^10.4.21",
+    "esbuild": "^0.25.9",
+    "fs-extra": "^11.2.0",
+    "nodemon": "^3.1.9",
+    "postcss": "^8.5.6",
+    "prettier": "^3.8.0",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.3"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

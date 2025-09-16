@@ -1,0 +1,5 @@
+{
+  "watch": ["src/"],
+  "ext": "js,jsx,ts,tsx,css",
+  "exec": "npx tailwindcss -i ./src/styles/globals.css -o ./dist/styles.css --minify && npx tsx _internal/generateShell.tsx"
+}
