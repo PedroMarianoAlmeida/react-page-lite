@@ -4,6 +4,16 @@ A lightweight React-based static site generator with islands architecture.
 
 Generate static HTML with selective interactivity - JavaScript only where you need it.
 
+## Quick Start
+
+```bash
+npx react-page-lite my-app
+cd my-app
+npm run buildAndWatch
+```
+
+Then open `docs/index.html` in your browser.
+
 ## Features
 
 - ⚡ **Static-First**: Pure HTML by default, SEO-friendly
@@ -12,23 +22,6 @@ Generate static HTML with selective interactivity - JavaScript only where you ne
 - 🚀 **Deploy Anywhere**: Just copy the output folder to any host
 - 🔧 **Auto-Discovery**: Components are automatically bundled
 - ⚙️ **Configurable**: Custom output directory via `config.json`
-
-## Quick Start
-
-```bash
-# Install
-npm install
-
-# Start development (watch mode)
-npm run buildAndWatch
-
-# One-time build
-node _internal/build.js
-```
-
-Open `docs/index.html` in your browser (or use Live Server extension for auto-reload).
-
-**Deploy:** Copy the entire `docs/` folder to any web server, CDN, or static host.
 
 ## Usage
 
@@ -84,25 +77,24 @@ src/
 │   ├── index.tsx       # → docs/index.html
 │   └── demo.tsx        # → docs/demo.html
 ├── components/         # Interactive components (auto-discovered)
-│   ├── Counter.tsx
-│   └── ui/            # Nested directories supported
-│       └── Button.tsx
+│   └── Counter.tsx     # Example interactive component
 └── styles/
     └── globals.css     # Tailwind input
 
 docs/                   # Build output (configurable)
-├── *.html             # Static HTML
+├── index.html         # Static HTML
+├── demo.html          # Demo page
 ├── styles.css         # Processed CSS
-└── islandRender.js    # Bundled components
+└── islandRender.js    # Bundled interactive components
 
 _internal/              # Build system
-config.json             # Output directory config
+config.json             # Configuration file
 ```
 
 **Configuration** (`config.json`):
 ```json
 {
-  "outputDir": "docs",  // or "dist", "build", etc.
+  "outputDir": "docs",  // Change to "dist", "build", etc.
   "buildOptions": {
     "minify": true,
     "sourcemap": false
@@ -110,24 +102,53 @@ config.json             # Output directory config
 }
 ```
 
+Perfect for GitHub Pages with `"outputDir": "docs"`.
+
 ## How It Works
 
 **Build Time:**
-- Pages → Static HTML with formatted output
-- Components → Auto-discovered and bundled into `islandRender.js`
-- Tailwind → Purged and minified to `styles.css`
+- Renders pages to static HTML with proper formatting
+- Auto-discovers components and bundles into `islandRender.js`
+- Processes Tailwind CSS and purges unused styles
 
 **Runtime:**
-- Static HTML loads first (instant, SEO-friendly)
-- Islands hydrate with React on the client
-- Only interactive components get JavaScript
+- Static HTML loads instantly (SEO-friendly, no JavaScript required)
+- Islands hydrate progressively on the client
+- Only interactive components download/execute JavaScript
 
 ## Development
 
-**Pages:** Create `.tsx` in `src/pages/` (supports nested directories)
-**Components:** Create `.tsx` in `src/components/` (auto-discovered)
-**Styling:** Use Tailwind classes (auto-purged)
-**Imports:** Clean paths via TypeScript (`@/Island`, `@/components/*`)
+**Commands:**
+- `npm run buildAndWatch` - Watch mode (rebuilds on file changes)
+- `node _internal/build.js` - One-time build
 
-Perfect for marketing sites, landing pages, documentation - anything that's mostly static with selective interactivity.
+**Structure:**
+- **Pages:** Create `.tsx` in `src/pages/` → generates HTML files
+- **Components:** Create `.tsx` in `src/components/` → auto-bundled for islands
+- **Styling:** Use Tailwind classes (automatically purged)
+- **Imports:** TypeScript paths (`@/Island`, `@/components/Counter`)
+
+## Deployment
+
+Copy the entire output folder to any static host:
+
+```bash
+# Default output: docs/ folder
+cp -r docs/ /your/web/server/
+
+# Or deploy to:
+# - GitHub Pages (use outputDir: "docs")
+# - Netlify, Vercel, Cloudflare Pages
+# - Any CDN or static hosting
+```
+
+## Use Cases
+
+Perfect for:
+- Marketing websites
+- Landing pages
+- Documentation sites
+- Portfolios
+
+Not for: Apps requiring authentication, databases, or server-side logic.
 

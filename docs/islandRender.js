@@ -19585,81 +19585,16 @@ var require_jsx_runtime = __commonJS({
 });
 
 // docs/islandRender.tsx
-var import_react6 = __toESM(require_react(), 1);
+var import_react2 = __toESM(require_react(), 1);
 var import_client = __toESM(require_client(), 1);
 
-// src/components/ColorPicker.tsx
+// src/components/Counter.tsx
 var import_react = __toESM(require_react(), 1);
 var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-function ColorPicker() {
-  const [selectedColor, setSelectedColor] = (0, import_react.useState)("#3B82F6");
-  const [customColor, setCustomColor] = (0, import_react.useState)("#FF0000");
-  const predefinedColors = [
-    "#3B82F6",
-    "#EF4444",
-    "#10B981",
-    "#F59E0B",
-    "#8B5CF6",
-    "#EC4899",
-    "#06B6D4",
-    "#84CC16"
-  ];
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "bg-white rounded-lg border border-gray-200 p-6", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { className: "text-lg font-semibold text-gray-900 mb-4", children: "Interactive Color Picker" }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      "div",
-      {
-        className: "w-full h-24 rounded-lg border-2 border-gray-300 mb-4 flex items-center justify-center text-white font-semibold",
-        style: { backgroundColor: selectedColor },
-        children: selectedColor
-      }
-    ),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "mb-4", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", { className: "block text-sm font-medium text-gray-700 mb-2", children: "Choose a predefined color:" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "grid grid-cols-4 gap-2", children: predefinedColors.map((color) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-        "button",
-        {
-          onClick: () => setSelectedColor(color),
-          className: `w-12 h-12 rounded-lg border-2 transition-all ${selectedColor === color ? "border-gray-800 scale-105" : "border-gray-300"}`,
-          style: { backgroundColor: color },
-          title: color
-        },
-        color
-      )) })
-    ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", { className: "block text-sm font-medium text-gray-700 mb-2", children: "Or pick a custom color:" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex gap-2", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-          "input",
-          {
-            type: "color",
-            value: customColor,
-            onChange: (e) => setCustomColor(e.target.value),
-            className: "w-12 h-10 rounded border border-gray-300"
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-          "button",
-          {
-            onClick: () => setSelectedColor(customColor),
-            className: "bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors",
-            children: "Apply Custom Color"
-          }
-        )
-      ] })
-    ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-xs text-gray-500 mt-4", children: "This component demonstrates state management and event handling in an island." })
-  ] });
-}
-
-// src/components/Counter.tsx
-var import_react2 = __toESM(require_react(), 1);
-var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
 function Counter() {
-  const [count, setCount] = (0, import_react2.useState)(0);
-  return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+  const [count, setCount] = (0, import_react.useState)(0);
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "card", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
       "button",
       {
         className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
@@ -19670,190 +19605,19 @@ function Counter() {
         ]
       }
     ),
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "text-gray-600 mt-2", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { className: "text-gray-600 mt-2", children: [
       "Edit",
       " ",
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("code", { className: "bg-gray-100 px-1 rounded", children: "src/components/Counter.tsx" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { className: "bg-gray-100 px-1 rounded", children: "src/components/Counter.tsx" }),
       " ",
       "and save to test HMR"
     ] })
   ] });
 }
 
-// src/components/Counter2.tsx
-var import_react3 = __toESM(require_react(), 1);
-var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
-function Counter2({ initialValue = 0 }) {
-  const [count, setCount] = (0, import_react3.useState)(initialValue);
-  return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "card border border-gray-300 p-4 rounded-lg", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h3", { className: "text-lg font-semibold mb-2", children: "Counter 2 (with initial value)" }),
-    /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
-      "button",
-      {
-        className: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2",
-        onClick: () => setCount((count2) => count2 + 1),
-        children: [
-          "count is ",
-          count
-        ]
-      }
-    ),
-    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-      "button",
-      {
-        className: "bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm",
-        onClick: () => setCount(initialValue),
-        children: "reset"
-      }
-    ),
-    /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "text-gray-600 mt-2 text-sm", children: [
-      "Started with initial value: ",
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("code", { className: "bg-gray-100 px-1 rounded", children: initialValue })
-    ] })
-  ] });
-}
-
-// src/components/FeatureCard.tsx
-var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
-function FeatureCard({ icon, title, description }) {
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "bg-white p-6 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "text-2xl mb-3", children: icon }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("h3", { className: "text-lg font-semibold text-gray-900 mb-2", children: title }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("p", { className: "text-gray-600 text-sm leading-relaxed", children: description })
-  ] });
-}
-
-// src/components/Hello.tsx
-var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
-var Hello = () => {
-  return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h1", { children: "Hello" });
-};
-
-// src/components/LiveClock.tsx
-var import_react4 = __toESM(require_react(), 1);
-var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
-function LiveClock() {
-  const [time, setTime] = (0, import_react4.useState)(/* @__PURE__ */ new Date());
-  (0, import_react4.useEffect)(() => {
-    const timer = setInterval(() => {
-      setTime(/* @__PURE__ */ new Date());
-    }, 1e3);
-    return () => clearInterval(timer);
-  }, []);
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "bg-gradient-to-br from-purple-500 to-blue-600 text-white rounded-lg p-6 text-center", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h3", { className: "text-lg font-semibold mb-2", children: "Live Clock" }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "text-3xl font-mono font-bold", children: time.toLocaleTimeString() }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "text-sm opacity-90 mt-1", children: time.toLocaleDateString() }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("p", { className: "text-xs opacity-75 mt-3", children: "This clock updates every second using client-side JavaScript" })
-  ] });
-}
-
-// src/components/Logo.tsx
-var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
-function Logo() {
-  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "flex items-center space-x-2", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "text-white font-bold text-sm", children: "RP" }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "text-xl font-bold text-gray-900", children: "React Page Lite" })
-  ] });
-}
-
-// src/components/TodoApp.tsx
-var import_react5 = __toESM(require_react(), 1);
-var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
-function TodoApp() {
-  const [todos, setTodos] = (0, import_react5.useState)([
-    { id: 1, text: "Learn React Page Lite", completed: true },
-    { id: 2, text: "Build a static site", completed: false },
-    { id: 3, text: "Add interactive islands", completed: false }
-  ]);
-  const [newTodo, setNewTodo] = (0, import_react5.useState)("");
-  const addTodo = () => {
-    if (newTodo.trim()) {
-      setTodos([...todos, {
-        id: Date.now(),
-        text: newTodo.trim(),
-        completed: false
-      }]);
-      setNewTodo("");
-    }
-  };
-  const toggleTodo = (id) => {
-    setTodos(todos.map(
-      (todo) => todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
-  };
-  const deleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-  };
-  return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "bg-white rounded-lg border border-gray-200 p-6 max-w-md", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h3", { className: "text-lg font-semibold text-gray-900 mb-4", children: "Interactive Todo App" }),
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "flex gap-2 mb-4", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
-        "input",
-        {
-          type: "text",
-          value: newTodo,
-          onChange: (e) => setNewTodo(e.target.value),
-          onKeyPress: (e) => e.key === "Enter" && addTodo(),
-          placeholder: "Add a new todo...",
-          className: "flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
-        "button",
-        {
-          onClick: addTodo,
-          className: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors",
-          children: "Add"
-        }
-      )
-    ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "space-y-2", children: todos.map((todo) => /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "flex items-center gap-3 p-2 bg-gray-50 rounded-lg", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
-        "input",
-        {
-          type: "checkbox",
-          checked: todo.completed,
-          onChange: () => toggleTodo(todo.id),
-          className: "w-4 h-4 text-blue-600 rounded"
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: `flex-1 ${todo.completed ? "line-through text-gray-500" : "text-gray-900"}`, children: todo.text }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
-        "button",
-        {
-          onClick: () => deleteTodo(todo.id),
-          className: "text-red-500 hover:text-red-700 text-sm font-medium",
-          children: "Delete"
-        }
-      )
-    ] }, todo.id)) }),
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "mt-4 text-sm text-gray-600", children: [
-      todos.filter((t) => !t.completed).length,
-      " of ",
-      todos.length,
-      " tasks remaining"
-    ] })
-  ] });
-}
-
-// src/components/ui/Button.tsx
-var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
-function Button() {
-  return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("button", { children: "Click me" });
-}
-
 // docs/islandRender.tsx
 var componentRegistry = {
-  "ColorPicker": ColorPicker,
-  "Counter": Counter,
-  "Counter2": Counter2,
-  "FeatureCard": FeatureCard,
-  "Hello": Hello,
-  "LiveClock": LiveClock,
-  "Logo": Logo,
-  "TodoApp": TodoApp,
-  "Button": Button
+  "Counter": Counter
 };
 var hydrateIslands = () => {
   const islands = document.querySelectorAll("[data-island]");
@@ -19865,7 +19629,7 @@ var hydrateIslands = () => {
         try {
           const Component = componentRegistry[componentName];
           const props = propsJson ? JSON.parse(propsJson) : {};
-          const element = import_react6.default.createElement(Component, props);
+          const element = import_react2.default.createElement(Component, props);
           (0, import_client.createRoot)(island).render(element);
         } catch (error) {
           console.error(`Failed to hydrate component ${componentName}:`, error);

@@ -1,4 +1,22 @@
-/node_modules
+# Dependencies
+node_modules
 
-# Build output (when using dist/)
-/dist
+# Build output
+# Note: Remove "docs" from gitignore if deploying to GitHub Pages
+dist
+# docs
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode
+.idea
+*.swp
+*.swo
+*~
