@@ -20,7 +20,8 @@
     ".gitignore"
   ],
   "scripts": {
-    "buildAndWatch": "nodemon --exec \"node _internal/build.js\""
+    "buildAndWatch": "nodemon --exec \"node _internal/build.js\"",
+    "update-template": "node _internal/update-template.js"
   },
   "keywords": [
     "react",

@@ -121,6 +121,7 @@ Perfect for GitHub Pages with `"outputDir": "docs"`.
 **Commands:**
 - `npm run buildAndWatch` - Watch mode (rebuilds on file changes)
 - `node _internal/build.js` - One-time build
+- `npm run update-template` - Update build system to latest version (safe, never touches your src/)
 
 **Structure:**
 - **Pages:** Create `.tsx` in `src/pages/` → generates HTML files
@@ -151,4 +152,24 @@ Perfect for:
 - Portfolios
 
 Not for: Apps requiring authentication, databases, or server-side logic.
+
+## Updating
+
+Get the latest build system improvements without affecting your content:
+
+```bash
+npm run update-template
+```
+
+**What gets updated:**
+- `_internal/` - Build system and tooling
+- Config files (`tailwind.config.js`, `tsconfig.json`, etc.)
+
+**What's never touched:**
+- `src/pages/` - Your pages
+- `src/components/` - Your components
+- `src/styles/` - Your styles
+- `docs/` or `dist/` - Your output
+
+The update script creates backups automatically. Your content is always safe.
 

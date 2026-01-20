@@ -93,3 +93,14 @@ export async function getFilesRecursively(dirPath: string, basePath: string = di
 
   return files;
 }
+
+/**
+ * Remove directory and all its contents
+ */
+export async function removeDirectory(dirPath: string): Promise<void> {
+  try {
+    await fs.rm(dirPath, { recursive: true, force: true });
+  } catch (error) {
+    throw new Error(`Failed to remove directory ${dirPath}: ${error}`);
+  }
+}

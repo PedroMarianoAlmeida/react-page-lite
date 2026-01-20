@@ -12,7 +12,8 @@ import {
   getFilesRecursively,
   filterComponentFiles,
   ensureDirectory,
-  directoryExists
+  directoryExists,
+  removeDirectory
 } from "./utils/fileUtils.js";
 import { logger, Timer } from "./utils/logger.js";
 import { getOutputDir } from "./utils/config.js";
@@ -31,6 +32,12 @@ const generateShell = async (): Promise<void> => {
     // Directory paths for pages and output
     const pagesDir = path.resolve("src/pages");
     const frontend = getOutputDir();
+
+    // Clean up existing output directory
+    if (await directoryExists(frontend)) {
+      logger.step(`Cleaning up existing output directory: ${frontend}`);
+      await removeDirectory(frontend);
+    }
 
     // Ensure output directory exists
     await ensureDirectory(frontend);

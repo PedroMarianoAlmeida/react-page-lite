@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Development
 - `npm run buildAndWatch` - Start development server with file watching and auto-rebuild (recommended)
 - `node _internal/build.js` - One-time build without watch mode
+- `npm run update-template` - Update internal build system from latest template (safe, never touches src/)
 
 ### Configuration
 - **`config.json`**: Configure output directory and build options
@@ -132,3 +133,55 @@ export default HomePage;
 - **Types**: @types/react, @types/node
 
 The project is fully functional and production-ready for static site generation with selective interactivity.
+
+## Releasing & Updating
+
+### Publishing New Version to NPM
+
+When you've made improvements to the template and want to release them:
+
+```bash
+# 1. Update version (choose one based on change type)
+npm version patch  # 1.0.3 -> 1.0.4 (bug fixes, small improvements)
+npm version minor  # 1.0.3 -> 1.1.0 (new features)
+npm version major  # 1.0.3 -> 2.0.0 (breaking changes)
+
+# 2. Push to GitHub (includes tags)
+git push && git push --tags
+
+# 3. Publish to npm (requires npm login first)
+npm login  # Only needed once
+npm publish
+
+# 4. (Optional) Create GitHub release with changelog
+gh release create v1.0.4 --generate-notes
+```
+
+### Updating Existing Projects
+
+Users who created projects from this template can update to the latest version:
+
+**The update script safely updates:**
+- `_internal/` - entire build system
+- Config files (`tailwind.config.js`, `tsconfig.json`, `nodemon.json`, etc.)
+- Dependencies (shows warning if `npm install` needed)
+
+**Never touches user content:**
+- `src/pages/` - user's pages
+- `src/components/` - user's components
+- `src/styles/` - user's styles
+- `docs/` or `dist/` - generated output
+
+**Update command:**
+```bash
+npm run update-template
+```
+
+This downloads the latest internal files from the GitHub repository and updates the build system while preserving all user content.
+
+### Build System Changes
+
+**Automatic cleanup (v1.0.3+):**
+- The build process now automatically removes the output directory before each build
+- This ensures deleted pages are removed from the output
+- No more orphaned HTML files accumulating in the output directory
