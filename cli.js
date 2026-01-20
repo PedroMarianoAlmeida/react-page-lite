@@ -46,8 +46,8 @@ const TEMPLATE_PACKAGE_JSON = {
     tsx: '^4.19.3'
   },
   dependencies: {
-    react: '^19.0.0',
-    'react-dom': '^19.0.0'
+    react: '^19.2.3',
+    'react-dom': '^19.2.3'
   }
 };
 
