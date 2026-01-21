@@ -33,12 +33,6 @@ const generateShell = async (): Promise<void> => {
     const pagesDir = path.resolve("src/pages");
     const frontend = getOutputDir();
 
-    // Clean up existing output directory
-    if (await directoryExists(frontend)) {
-      logger.step(`Cleaning up existing output directory: ${frontend}`);
-      await removeDirectory(frontend);
-    }
-
     // Ensure output directory exists
     await ensureDirectory(frontend);
 
