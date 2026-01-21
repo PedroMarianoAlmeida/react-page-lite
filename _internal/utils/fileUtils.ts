@@ -104,3 +104,54 @@ export async function removeDirectory(dirPath: string): Promise<void> {
     throw new Error(`Failed to remove directory ${dirPath}: ${error}`);
   }
 }
+
+/**
+ * Find and remove orphaned HTML files in the output directory
+ * that don't have a corresponding source file in src/pages/
+ */
+export async function cleanupOrphanedHtmlFiles(outputDir: string, pagesDir: string): Promise<number> {
+  try {
+    // Check if output directory exists
+    if (!(await directoryExists(outputDir))) {
+      return 0;
+    }
+
+    // Get all HTML files in the output directory
+    const allOutputFiles = await getFilesRecursively(outputDir);
+    const htmlFiles = allOutputFiles.filter(file => file.endsWith('.html'));
+
+    let removedCount = 0;
+
+    for (const htmlFile of htmlFiles) {
+      // Convert HTML filename back to possible source filenames
+      const baseNameWithoutExt = htmlFile.replace(/\.html$/, '');
+
+      // Check if any of the possible source files exist
+      const possibleSourceFiles = COMPONENT_EXTENSIONS.map(ext =>
+        path.join(pagesDir, `${baseNameWithoutExt}${ext}`)
+      );
+
+      const sourceExists = await Promise.all(
+        possibleSourceFiles.map(async (sourcePath) => {
+          try {
+            await fs.access(sourcePath);
+            return true;
+          } catch {
+            return false;
+          }
+        })
+      );
+
+      // If no source file exists, delete the orphaned HTML file
+      if (!sourceExists.some(exists => exists)) {
+        const htmlFilePath = path.join(outputDir, htmlFile);
+        await fs.unlink(htmlFilePath);
+        removedCount++;
+      }
+    }
+
+    return removedCount;
+  } catch (error) {
+    throw new Error(`Failed to cleanup orphaned HTML files: ${error}`);
+  }
+}

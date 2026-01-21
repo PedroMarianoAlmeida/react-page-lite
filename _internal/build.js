@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { execSync } from "child_process";
-import { readFileSync, existsSync, rmSync, mkdirSync } from "fs";
+import { readFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
 
 // Simple config loader without TypeScript dependencies
@@ -40,14 +40,10 @@ function build() {
   console.log(`🔄 Building to: ${outputDir}`);
 
   try {
-    // Clean up existing output directory FIRST (before Tailwind runs)
-    if (existsSync(outputDir)) {
-      console.log(`🔄 Cleaning up existing output directory: ${outputDir}`);
-      rmSync(outputDir, { recursive: true, force: true });
+    // Ensure output directory exists (smart cleanup happens in generateShell.tsx)
+    if (!existsSync(outputDir)) {
+      mkdirSync(outputDir, { recursive: true });
     }
-
-    // Ensure output directory exists
-    mkdirSync(outputDir, { recursive: true });
 
     // Build Tailwind CSS with configurable output directory (styles.css now stays)
     const tailwindCmd = `npx tailwindcss -i ./src/styles/globals.css -o ./${outputDir}/styles.css --minify`;

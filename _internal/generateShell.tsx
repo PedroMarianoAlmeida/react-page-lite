@@ -13,7 +13,8 @@ import {
   filterComponentFiles,
   ensureDirectory,
   directoryExists,
-  removeDirectory
+  removeDirectory,
+  cleanupOrphanedHtmlFiles
 } from "./utils/fileUtils.js";
 import { logger, Timer } from "./utils/logger.js";
 import { getOutputDir } from "./utils/config.js";
@@ -40,6 +41,13 @@ const generateShell = async (): Promise<void> => {
     if (!(await directoryExists(pagesDir))) {
       logger.error(`Pages directory not found: ${pagesDir}`);
       throw new Error("Cannot generate pages without src/pages directory");
+    }
+
+    // Clean up orphaned HTML files (from deleted pages)
+    logger.step("Cleaning up orphaned HTML files...");
+    const removedCount = await cleanupOrphanedHtmlFiles(frontend, pagesDir);
+    if (removedCount > 0) {
+      logger.debug(`Removed ${removedCount} orphaned HTML file(s)`);
     }
 
     // Generate island renderer first
