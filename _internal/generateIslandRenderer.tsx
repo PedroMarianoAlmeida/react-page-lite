@@ -16,9 +16,9 @@ import { getOutputDir } from "./utils/config.js";
 
 /**
  * Generate the island renderer that handles client-side component hydration
- * @param usedComponents Optional set of component names to bundle (if omitted, bundles all components)
+ * @param usedComponents Set of component names to bundle. Empty set = no components bundled.
  */
-const generateIslandRenderer = async (usedComponents?: Set<string>): Promise<void> => {
+const generateIslandRenderer = async (usedComponents: Set<string>): Promise<void> => {
   const timer = new Timer("Island renderer generation");
 
   const componentsDir = path.resolve("src/components");
@@ -54,31 +54,38 @@ const generateIslandRenderer = async (usedComponents?: Set<string>): Promise<voi
       return;
     }
 
-    // Filter to only used components if provided
-    if (usedComponents && usedComponents.size > 0) {
-      logger.step(`Filtering to ${usedComponents.size} used components...`);
+    // If no islands are used, generate empty renderer
+    if (usedComponents.size === 0) {
+      logger.info("No islands used - generating minimal renderer");
+      await ensureDirectory(path.dirname(outputPath));
+      await fs.writeFile(outputPath, generateEmptyRenderer(), 'utf8');
+      timer.end();
+      return;
+    }
 
-      componentFiles = componentFiles.filter(file => {
-        const componentName = getComponentName(file);
-        return usedComponents.has(componentName);
-      });
+    // Filter to only used components
+    logger.step(`Filtering to ${usedComponents.size} used components...`);
 
-      // Validate we found all requested components
-      const foundNames = new Set(componentFiles.map(f => getComponentName(f)));
-      const missingComponents = Array.from(usedComponents)
-        .filter(name => !foundNames.has(name));
+    componentFiles = componentFiles.filter(file => {
+      const componentName = getComponentName(file);
+      return usedComponents.has(componentName);
+    });
 
-      if (missingComponents.length > 0) {
-        logger.warn(`Islands reference missing components: ${missingComponents.join(', ')}`);
-      }
+    // Validate we found all requested components
+    const foundNames = new Set(componentFiles.map(f => getComponentName(f)));
+    const missingComponents = Array.from(usedComponents)
+      .filter(name => !foundNames.has(name));
 
-      if (componentFiles.length === 0) {
-        logger.warn("No used components found, generating empty renderer");
-        await ensureDirectory(path.dirname(outputPath));
-        await fs.writeFile(outputPath, generateEmptyRenderer(), 'utf8');
-        timer.end();
-        return;
-      }
+    if (missingComponents.length > 0) {
+      logger.warn(`Islands reference missing components: ${missingComponents.join(', ')}`);
+    }
+
+    if (componentFiles.length === 0) {
+      logger.warn("No used components found, generating empty renderer");
+      await ensureDirectory(path.dirname(outputPath));
+      await fs.writeFile(outputPath, generateEmptyRenderer(), 'utf8');
+      timer.end();
+      return;
     }
 
     // Validate all components
@@ -165,12 +172,8 @@ if (typeof document !== 'undefined') {
     // Clean up temp file
     await fs.unlink(tempPath);
 
-    if (usedComponents) {
-      logger.success(`Generated island renderer with ${componentFiles.length}/${totalComponents} components`);
-      logger.debug(`Bundled: ${componentFiles.map(f => getComponentName(f)).join(', ')}`);
-    } else {
-      logger.success(`Generated island renderer with ${componentFiles.length} components (all)`);
-    }
+    logger.success(`Generated island renderer with ${componentFiles.length}/${totalComponents} components`);
+    logger.debug(`Bundled: ${componentFiles.map(f => getComponentName(f)).join(', ')}`);
 
     timer.end();
   } catch (error) {

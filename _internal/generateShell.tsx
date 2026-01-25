@@ -118,7 +118,8 @@ const generateShell = async (): Promise<void> => {
     }
 
     // ========== PHASE 3: Generate island renderer ==========
-    await generateIslandRenderer(usedComponents.size > 0 ? usedComponents : undefined);
+    // Always pass the set - empty set means no components should be bundled
+    await generateIslandRenderer(usedComponents);
 
     // ========== PHASE 4: Write HTML files ==========
     logger.step(`Writing ${renderedPages.length} HTML files...`);
