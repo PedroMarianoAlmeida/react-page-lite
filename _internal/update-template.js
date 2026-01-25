@@ -89,6 +89,7 @@ async function updateInternalFolder() {
   // For simplicity, we'll use a predefined list of common files
   const internalFiles = [
     "_internal/build.js",
+    "_internal/update-template.js",
     "_internal/generateShell.tsx",
     "_internal/generateIslandRenderer.tsx",
     "_internal/components/Island.tsx",
@@ -97,6 +98,7 @@ async function updateInternalFolder() {
     "_internal/utils/componentValidator.ts",
     "_internal/utils/logger.ts",
     "_internal/utils/config.ts",
+    "_internal/utils/islandDiscovery.ts",
   ];
 
   let successCount = 0;
