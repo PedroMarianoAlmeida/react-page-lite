@@ -29,7 +29,8 @@ const TEMPLATE_PACKAGE_JSON = {
   description: 'A React Page Lite project',
   type: 'module',
   scripts: {
-    buildAndWatch: 'nodemon --exec "node _internal/build.js"'
+    buildAndWatch: 'nodemon --exec "node _internal/build.js"',
+    'update-template': 'node _internal/update-template.js'
   },
   author: '',
   license: 'ISC',
@@ -101,6 +102,20 @@ async function main() {
       cwd: targetDir,
       stdio: 'inherit'
     });
+
+    // Initialize git repository
+    console.log('\n📝 Initializing git repository...');
+    try {
+      execSync('git init', { cwd: targetDir, stdio: 'inherit' });
+      execSync('git add -A', { cwd: targetDir, stdio: 'inherit' });
+      execSync('git commit -m "Initial commit from react-page-lite"', {
+        cwd: targetDir,
+        stdio: 'inherit'
+      });
+      console.log('✅ Git repository initialized');
+    } catch (gitError) {
+      console.log('⚠️  Could not initialize git repository (is git installed?)');
+    }
 
     console.log('\n✅ Done! Your React Page Lite project is ready.\n');
     console.log('Next steps:');
