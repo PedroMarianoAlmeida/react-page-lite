@@ -18,6 +18,7 @@ import {
 } from "./utils/fileUtils.js";
 import { logger, Timer } from "./utils/logger.js";
 import { getOutputDir } from "./utils/config.js";
+import { discoverIslandsInHtml, combineIslandDiscoveries } from "./utils/islandDiscovery.js";
 
 interface PageModule {
   default: React.ComponentType;
@@ -30,30 +31,24 @@ const generateShell = async (): Promise<void> => {
   const timer = new Timer("Shell generation");
 
   try {
-    // Directory paths for pages and output
     const pagesDir = path.resolve("src/pages");
     const frontend = getOutputDir();
 
-    // Ensure output directory exists
     await ensureDirectory(frontend);
 
-    // Check if pages directory exists
     if (!(await directoryExists(pagesDir))) {
       logger.error(`Pages directory not found: ${pagesDir}`);
       throw new Error("Cannot generate pages without src/pages directory");
     }
 
-    // Clean up orphaned HTML files (from deleted pages)
+    // Clean up orphaned HTML files
     logger.step("Cleaning up orphaned HTML files...");
     const removedCount = await cleanupOrphanedHtmlFiles(frontend, pagesDir);
     if (removedCount > 0) {
       logger.debug(`Removed ${removedCount} orphaned HTML file(s)`);
     }
 
-    // Generate island renderer first
-    await generateIslandRenderer();
-
-    // Scan pages directory
+    // ========== PHASE 1: Render pages to discover islands ==========
     logger.step("Scanning pages directory...");
     const allFiles = await getFilesRecursively(pagesDir);
     const pageFiles = filterComponentFiles(allFiles);
@@ -64,17 +59,21 @@ const generateShell = async (): Promise<void> => {
       return;
     }
 
-    // Generate pages
-    logger.step(`Processing ${pageFiles.length} pages...`);
-    const generatedFiles: string[] = [];
+    logger.step(`Rendering ${pageFiles.length} pages...`);
 
+    interface PageRenderResult {
+      file: string;
+      html: string;
+      outputPath: string;
+    }
+
+    const renderedPages: PageRenderResult[] = [];
+
+    // Render all pages to memory
     for (const file of pageFiles) {
       try {
-        // Get the absolute file path and convert it to a file URL for dynamic import
         const filePath = path.join(pagesDir, file);
         const fileUrl = pathToFileURL(filePath).href;
-
-        // Dynamically import the module and extract the default component
         const module: PageModule = await import(fileUrl);
 
         if (!module.default) {
@@ -83,30 +82,53 @@ const generateShell = async (): Promise<void> => {
         }
 
         const PageComponent = module.default;
-
-        // Render the component to a string using streaming SSR
         const componentHtml = await renderPageToString(<PageComponent />);
 
-        // Define the output file name (change extension to .html)
-        // Support nested pages by preserving directory structure
         const relativePath = file.replace(/\.(tsx?|jsx?)$/, '.html');
         const outputFilePath = path.join(frontend, relativePath);
 
-        // Ensure nested directories exist
-        await ensureDirectory(path.dirname(outputFilePath));
+        renderedPages.push({
+          file,
+          html: componentHtml,
+          outputPath: outputFilePath
+        });
 
-        // Write the HTML output to the frontend directory
-        await fs.writeFile(outputFilePath, componentHtml, "utf8");
-
-        generatedFiles.push(outputFilePath);
-        logger.debug(`Generated ${relativePath}`);
+        logger.debug(`Rendered ${relativePath}`);
       } catch (error) {
-        logger.error(`Failed to generate page ${file}:`, error);
+        logger.error(`Failed to render page ${file}:`, error);
         throw error;
       }
     }
 
-    logger.success(`Generated ${generatedFiles.length} pages`);
+    // ========== PHASE 2: Discover islands ==========
+    logger.step("Discovering islands...");
+    const htmlContents = renderedPages.map(p => p.html);
+    const componentCounts = combineIslandDiscoveries(htmlContents);
+    const usedComponents = new Set(componentCounts.keys());
+
+    if (usedComponents.size === 0) {
+      logger.info("No islands found in any page");
+    } else {
+      logger.success(`Discovered ${usedComponents.size} unique island components:`);
+      Array.from(componentCounts.entries())
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .forEach(([name, count]) => {
+          logger.debug(`  - ${name} (${count} instance${count > 1 ? 's' : ''})`);
+        });
+    }
+
+    // ========== PHASE 3: Generate island renderer ==========
+    await generateIslandRenderer(usedComponents.size > 0 ? usedComponents : undefined);
+
+    // ========== PHASE 4: Write HTML files ==========
+    logger.step(`Writing ${renderedPages.length} HTML files...`);
+
+    for (const { outputPath, html } of renderedPages) {
+      await ensureDirectory(path.dirname(outputPath));
+      await fs.writeFile(outputPath, html, "utf8");
+    }
+
+    logger.success(`Generated ${renderedPages.length} pages`);
     timer.end();
 
   } catch (error) {
