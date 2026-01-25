@@ -80,71 +80,38 @@ function getFilesRecursively(dir, baseDir = dir) {
 }
 
 /**
- * Backup a directory
- */
-function backupDirectory(dir) {
-  const backupDir = `${dir}.backup.${Date.now()}`;
-  if (fs.existsSync(dir)) {
-    fs.cpSync(dir, backupDir, { recursive: true });
-    log.info(`Created backup: ${backupDir}`);
-    return backupDir;
-  }
-  return null;
-}
-
-/**
  * Update _internal folder
  */
 async function updateInternalFolder() {
   log.step("Updating _internal/ folder...");
 
-  // Create backup
-  const backup = backupDirectory("_internal");
+  // Get list of files from GitHub by downloading a manifest
+  // For simplicity, we'll use a predefined list of common files
+  const internalFiles = [
+    "_internal/build.js",
+    "_internal/generateShell.tsx",
+    "_internal/generateIslandRenderer.tsx",
+    "_internal/components/Island.tsx",
+    "_internal/helpers/renderPageToString.ts",
+    "_internal/utils/fileUtils.ts",
+    "_internal/utils/componentValidator.ts",
+    "_internal/utils/logger.ts",
+    "_internal/utils/config.ts",
+  ];
 
-  try {
-    // Get list of files from GitHub by downloading a manifest
-    // For simplicity, we'll use a predefined list of common files
-    const internalFiles = [
-      "_internal/build.js",
-      "_internal/generateShell.tsx",
-      "_internal/generateIslandRenderer.tsx",
-      "_internal/components/Island.tsx",
-      "_internal/helpers/renderPageToString.ts",
-      "_internal/utils/fileUtils.ts",
-      "_internal/utils/componentValidator.ts",
-      "_internal/utils/logger.ts",
-      "_internal/utils/config.ts",
-    ];
-
-    let successCount = 0;
-    for (const file of internalFiles) {
-      try {
-        await downloadFile(file, file);
-        log.success(`Updated ${file}`);
-        successCount++;
-      } catch (error) {
-        log.warn(`Skipped ${file}: ${error.message}`);
-      }
+  let successCount = 0;
+  for (const file of internalFiles) {
+    try {
+      await downloadFile(file, file);
+      log.success(`Updated ${file}`);
+      successCount++;
+    } catch (error) {
+      log.warn(`Skipped ${file}: ${error.message}`);
     }
-
-    log.success(`Updated ${successCount} internal files`);
-
-    if (backup) {
-      log.info("Backup kept for safety. Delete manually if update works fine.");
-    }
-  } catch (error) {
-    log.error(`Failed to update _internal: ${error.message}`);
-
-    // Restore backup on error
-    if (backup && fs.existsSync(backup)) {
-      log.info("Restoring from backup...");
-      fs.rmSync("_internal", { recursive: true, force: true });
-      fs.cpSync(backup, "_internal", { recursive: true });
-      log.success("Restored from backup");
-    }
-
-    throw error;
   }
+
+  log.success(`Updated ${successCount} internal files`);
+  log.info("Use 'git checkout HEAD -- _internal' to rollback if needed");
 }
 
 /**
@@ -156,27 +123,11 @@ async function updateConfigFiles() {
   let successCount = 0;
   for (const file of CONFIG_FILES) {
     try {
-      // Backup existing file
-      if (fs.existsSync(file)) {
-        fs.copyFileSync(file, `${file}.backup`);
-      }
-
       await downloadFile(file, file);
       log.success(`Updated ${file}`);
       successCount++;
-
-      // Remove backup if successful
-      if (fs.existsSync(`${file}.backup`)) {
-        fs.unlinkSync(`${file}.backup`);
-      }
     } catch (error) {
       log.warn(`Skipped ${file}: ${error.message}`);
-
-      // Restore backup on error
-      if (fs.existsSync(`${file}.backup`)) {
-        fs.copyFileSync(`${file}.backup`, file);
-        fs.unlinkSync(`${file}.backup`);
-      }
     }
   }
 
@@ -254,6 +205,7 @@ async function update() {
 
     log.success("Template files updated successfully");
     log.info("Your pages and components remain unchanged");
+    log.info("Commit changes or use git to rollback if needed");
 
     if (needsInstall) {
       log.warn("Run 'npm install' to update dependencies");
