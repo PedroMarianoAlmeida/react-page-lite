@@ -192,6 +192,8 @@ This downloads the latest internal files from the GitHub repository and updates 
 ### Build System Changes
 
 **Automatic cleanup (v1.0.3+):**
-- The build process now automatically removes the output directory before each build
-- This ensures deleted pages are removed from the output
-- No more orphaned HTML files accumulating in the output directory
+- The build process now automatically cleans up orphaned files:
+  - **Pages**: Deleted pages are removed from the output directory
+  - **Public files**: Deleted files from `public/` are removed from output directory
+- Build-generated files (styles.css, islandRender.js, *.html) are protected from cleanup
+- No more orphaned files accumulating in the output directory

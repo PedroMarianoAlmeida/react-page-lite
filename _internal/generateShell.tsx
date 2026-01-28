@@ -15,6 +15,7 @@ import {
   directoryExists,
   removeDirectory,
   cleanupOrphanedHtmlFiles,
+  cleanupOrphanedPublicFiles,
   copyPublicDirectory
 } from "./utils/fileUtils.js";
 import { logger, Timer } from "./utils/logger.js";
@@ -45,9 +46,16 @@ const generateShell = async (): Promise<void> => {
 
     // Clean up orphaned HTML files
     logger.step("Cleaning up orphaned HTML files...");
-    const removedCount = await cleanupOrphanedHtmlFiles(frontend, pagesDir);
-    if (removedCount > 0) {
-      logger.debug(`Removed ${removedCount} orphaned HTML file(s)`);
+    const removedHtmlCount = await cleanupOrphanedHtmlFiles(frontend, pagesDir);
+    if (removedHtmlCount > 0) {
+      logger.debug(`Removed ${removedHtmlCount} orphaned HTML file(s)`);
+    }
+
+    // Clean up orphaned public files
+    logger.step("Cleaning up orphaned public assets...");
+    const removedPublicCount = await cleanupOrphanedPublicFiles(frontend, publicDir);
+    if (removedPublicCount > 0) {
+      logger.debug(`Removed ${removedPublicCount} orphaned public file(s)`);
     }
 
     // Copy public directory files

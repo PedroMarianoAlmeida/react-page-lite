@@ -157,6 +157,59 @@ export async function cleanupOrphanedHtmlFiles(outputDir: string, pagesDir: stri
 }
 
 /**
+ * Find and remove orphaned files in the output directory
+ * that were copied from public/ but no longer exist there
+ */
+export async function cleanupOrphanedPublicFiles(outputDir: string, publicDir: string): Promise<number> {
+  try {
+    // Check if output directory exists
+    if (!(await directoryExists(outputDir))) {
+      return 0;
+    }
+
+    // Get all files in the output directory
+    const allOutputFiles = await getFilesRecursively(outputDir);
+
+    // Build system generated files that should never be deleted
+    const generatedFiles = new Set([
+      'styles.css',
+      'islandRender.js',
+      'islandRender.js.map'
+    ]);
+
+    let removedCount = 0;
+
+    for (const file of allOutputFiles) {
+      // Skip HTML files (managed by cleanupOrphanedHtmlFiles)
+      if (file.endsWith('.html')) {
+        continue;
+      }
+
+      // Skip generated files
+      if (generatedFiles.has(file)) {
+        continue;
+      }
+
+      // Check if file exists in public directory
+      const publicFilePath = path.join(publicDir, file);
+      try {
+        await fs.access(publicFilePath);
+        // File exists in public/, keep it
+      } catch {
+        // File doesn't exist in public/, remove it
+        const outputFilePath = path.join(outputDir, file);
+        await fs.unlink(outputFilePath);
+        removedCount++;
+      }
+    }
+
+    return removedCount;
+  } catch (error) {
+    throw new Error(`Failed to cleanup orphaned public files: ${error}`);
+  }
+}
+
+/**
  * Copy all files from public directory to output directory
  * Preserves directory structure and handles nested folders
  */
