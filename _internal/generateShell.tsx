@@ -14,7 +14,8 @@ import {
   ensureDirectory,
   directoryExists,
   removeDirectory,
-  cleanupOrphanedHtmlFiles
+  cleanupOrphanedHtmlFiles,
+  copyPublicDirectory
 } from "./utils/fileUtils.js";
 import { logger, Timer } from "./utils/logger.js";
 import { getOutputDir } from "./utils/config.js";
@@ -32,6 +33,7 @@ const generateShell = async (): Promise<void> => {
 
   try {
     const pagesDir = path.resolve("src/pages");
+    const publicDir = path.resolve("public");
     const frontend = getOutputDir();
 
     await ensureDirectory(frontend);
@@ -46,6 +48,15 @@ const generateShell = async (): Promise<void> => {
     const removedCount = await cleanupOrphanedHtmlFiles(frontend, pagesDir);
     if (removedCount > 0) {
       logger.debug(`Removed ${removedCount} orphaned HTML file(s)`);
+    }
+
+    // Copy public directory files
+    logger.step("Copying public assets...");
+    const copiedCount = await copyPublicDirectory(publicDir, frontend);
+    if (copiedCount > 0) {
+      logger.success(`Copied ${copiedCount} file(s) from public/`);
+    } else {
+      logger.debug("No public/ directory or files found");
     }
 
     // ========== PHASE 1: Render pages to discover islands ==========

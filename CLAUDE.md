@@ -18,8 +18,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Key Build Process
 The build process runs automatically when files change:
 1. Compiles Tailwind CSS to `<outputDir>/styles.css` (purged based on src/ usage)
-2. Generates `<outputDir>/islandRender.js` (auto-discovers all components in `src/components/`)
-3. Renders all pages from `src/pages/` to static HTML in `<outputDir>/`
+2. Copies all files from `public/` to `<outputDir>/` (preserving directory structure)
+3. Generates `<outputDir>/islandRender.js` (auto-discovers all components in `src/components/`)
+4. Renders all pages from `src/pages/` to static HTML in `<outputDir>/`
 
 ## Project Overview
 
@@ -31,6 +32,7 @@ React Page Lite is a fully functional React-based static site generator with isl
 - **`src/pages/`**: Full HTML page components (must export default and return complete `<html>` documents). Supports nested directories - structure mirrors output.
 - **`src/components/`**: Reusable React components (auto-discovered for islands). Supports nested directories (e.g., `ui/Button.tsx`).
 - **`src/styles/`**: Tailwind CSS input files
+- **`public/`**: Static assets (PDFs, images, fonts, etc.) copied directly to output directory. Directory structure is preserved.
 - **`<outputDir>/`**: Generated static files ready for deployment (configurable via `config.json`, defaults to `dist/`)
 - **`_internal/`**: Build system (do not modify)
 
@@ -57,9 +59,10 @@ The project implements a sophisticated islands architecture:
 
 ### Build System
 - **Page Generation**: `_internal/generateShell.tsx` renders React pages to static HTML, preserving nested directory structure
+- **Static Assets**: All files in `public/` are copied to output directory during build
 - **CSS Processing**: Tailwind CSS with automatic purging of unused styles via `nodemon.json`
 - **Component Bundling**: esbuild bundles all interactive components into single `islandRender.js`
-- **File Watching**: nodemon watches `src/` for `.js,.jsx,.ts,.tsx,.css` changes and rebuilds automatically
+- **File Watching**: nodemon watches `src/` and `public/` for changes and rebuilds automatically
 
 ### Key Features
 - **TypeScript**: Full TypeScript support with path mapping (`@/components/*`, `@/Island`)
@@ -88,6 +91,13 @@ The project implements a sophisticated islands architecture:
 - Use Tailwind classes directly in components
 - CSS is automatically purged to include only used classes
 - Custom styles can be added to `src/styles/globals.css`
+
+### Adding Static Assets
+1. Place files in `public/` directory (e.g., `public/documents/guide.pdf`)
+2. Files are automatically copied to output directory on build
+3. Reference in pages: `<a href="./documents/guide.pdf">Download</a>`
+4. Supports any file type: PDFs, images, fonts, videos, etc.
+5. Directory structure is preserved in output
 
 ### Example Usage
 ```tsx

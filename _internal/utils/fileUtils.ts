@@ -155,3 +155,35 @@ export async function cleanupOrphanedHtmlFiles(outputDir: string, pagesDir: stri
     throw new Error(`Failed to cleanup orphaned HTML files: ${error}`);
   }
 }
+
+/**
+ * Copy all files from public directory to output directory
+ * Preserves directory structure and handles nested folders
+ */
+export async function copyPublicDirectory(publicDir: string, outputDir: string): Promise<number> {
+  try {
+    // Check if public directory exists
+    if (!(await directoryExists(publicDir))) {
+      return 0;
+    }
+
+    // Get all files in the public directory
+    const allFiles = await getFilesRecursively(publicDir);
+
+    // Copy each file to the output directory
+    for (const file of allFiles) {
+      const sourcePath = path.join(publicDir, file);
+      const destPath = path.join(outputDir, file);
+
+      // Ensure destination directory exists
+      await ensureDirectory(path.dirname(destPath));
+
+      // Copy the file
+      await fs.copyFile(sourcePath, destPath);
+    }
+
+    return allFiles.length;
+  } catch (error) {
+    throw new Error(`Failed to copy public directory: ${error}`);
+  }
+}

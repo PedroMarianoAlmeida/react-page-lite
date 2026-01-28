@@ -1,5 +1,5 @@
 {
-  "watch": ["src/"],
-  "ext": "js,jsx,ts,tsx,css",
-  "exec": "npx tailwindcss -i ./src/styles/globals.css -o ./dist/styles.css --minify && npx tsx _internal/generateShell.tsx"
+  "watch": ["src/", "public/"],
+  "ext": "js,jsx,ts,tsx,css,pdf,png,jpg,jpeg,gif,svg,ico,woff,woff2,ttf,eot,json,xml,txt,md",
+  "exec": "node _internal/build.js"
 }
