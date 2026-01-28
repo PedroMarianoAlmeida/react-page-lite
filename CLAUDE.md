@@ -173,7 +173,7 @@ Users who created projects from this template can update to the latest version:
 
 **The update script safely updates:**
 - `_internal/` - entire build system
-- Config files (`tailwind.config.js`, `tsconfig.json`, `nodemon.json`, etc.)
+- Config files (`nodemon.json`, `postcss.config.js`, `config.json`)
 - Dependencies (shows warning if `npm install` needed)
 
 **Never touches user content:**

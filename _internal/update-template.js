@@ -16,8 +16,6 @@ const GITHUB_RAW_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_N
 
 // Files to update (safe files only - never user content)
 const CONFIG_FILES = [
-  "tailwind.config.js",
-  "tsconfig.json",
   "postcss.config.js",
   "nodemon.json",
   "config.json",
